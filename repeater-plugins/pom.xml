@@ -17,6 +17,8 @@
         <module>http-plugin</module>
         <module>dubbo-plugin</module>
         <module>redis-plugin</module>
+        <module>hibernate-plugin</module>
+        <module>spring-data-jpa-plugin</module>
     </modules>
 
     <dependencies>
@@ -31,9 +33,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

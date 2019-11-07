@@ -1,6 +1,8 @@
 package com.alibaba.jvm.sandbox.repeater.plugin.dubbo;
 
 import com.alibaba.jvm.sandbox.api.event.Event;
+import com.alibaba.jvm.sandbox.api.listener.EventListener;
+import com.alibaba.jvm.sandbox.repeater.plugin.api.InvocationListener;
 import com.alibaba.jvm.sandbox.repeater.plugin.api.InvocationProcessor;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.impl.AbstractInvokePluginAdapter;
 import com.alibaba.jvm.sandbox.repeater.plugin.core.model.EnhanceModel;
@@ -26,14 +28,14 @@ public class DubboProviderPlugin extends AbstractInvokePluginAdapter {
     protected List<EnhanceModel> getEnhanceModels() {
         EnhanceModel onResponse = EnhanceModel.builder().classPattern("org.apache.dubbo.rpc.filter.ContextFilter$ContextListener")
                 .methodPatterns(EnhanceModel.MethodPattern.transform("onResponse"))
-                .watchTypes(Event.Type.BEFORE,Event.Type.RETURN, Event.Type.THROWS)
+                .watchTypes(Event.Type.BEFORE, Event.Type.RETURN, Event.Type.THROWS)
                 .build();
         return Lists.newArrayList(onResponse);
     }
 
     @Override
     protected InvocationProcessor getInvocationProcessor() {
-        return new DubboProcessor(getType());
+        return new DubboProviderInvocationProcessor(getType());
     }
 
     @Override
@@ -49,5 +51,10 @@ public class DubboProviderPlugin extends AbstractInvokePluginAdapter {
     @Override
     public boolean isEntrance() {
         return true;
+    }
+
+    @Override
+    protected EventListener getEventListener(InvocationListener listener) {
+        return new DubboEventListener(getType(), isEntrance(), listener, getInvocationProcessor());
     }
 }
